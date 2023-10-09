@@ -1,7 +1,6 @@
 import time
 import multiprocessing
 
-
 def factorize(number):
     factors = []
     for i in range(1, number + 1):
@@ -9,11 +8,10 @@ def factorize(number):
             factors.append(i)
     return factors
 
-
 def factorize_parallel(numbers):
-    with multiprocessing.Pool() as pool:
+    num_cores = multiprocessing.cpu_count()  # Отримуємо кількість доступних ядер
+    with multiprocessing.Pool(processes=num_cores) as pool:
         return pool.map(factorize, numbers)
-
 
 if __name__ == "__main__":
     test_numbers = [128, 255, 99999, 10651060]
@@ -39,4 +37,3 @@ if __name__ == "__main__":
     for i, num in enumerate(test_numbers):
         print(f"Число {num}: {results_parallel[i]}")
     print(f"Час виконання паралельної версії: {execution_time_parallel} секунд")
-
