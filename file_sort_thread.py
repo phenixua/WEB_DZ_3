@@ -42,22 +42,22 @@ def copy_file(path: Path) -> None:
             except OSError as err:
                 logging.error(err)  # Логуємо помилку
 
+if __name__ == '__main__':
+    # Встановлюємо рівень логування та формат повідомлень:
+    logging.basicConfig(level=logging.INFO, format="%(threadName)s %(message)s")
 
-# Встановлюємо рівень логування та формат повідомлень:
-logging.basicConfig(level=logging.INFO, format="%(threadName)s %(message)s")
+    folders.append(source)  # Додаємо вихідну папку до списку folders
+    grabs_folder(source)  # Запускаємо обробку всіх папок
 
-folders.append(source)  # Додаємо вихідну папку до списку folders
-grabs_folder(source)  # Запускаємо обробку всіх папок
+    threads = []
 
-threads = []
+    # Створюємо потоки для обробки кожної папки:
+    for folder in folders:
+        th = Thread(target=copy_file, args=(folder,))
+        th.start()
+        threads.append(th)
 
-# Створюємо потоки для обробки кожної папки:
-for folder in folders:
-    th = Thread(target=copy_file, args=(folder,))
-    th.start()
-    threads.append(th)
+    # Очікуємо завершення роботи всіх потоків:
+    [th.join() for th in threads]
 
-# Очікуємо завершення роботи всіх потоків:
-[th.join() for th in threads]
-
-print(f"Можна видаляти {source}")  # Виводимо повідомлення про готовність видалення вихідної папки
+    print(f"Можна видаляти {source}")  # Виводимо повідомлення про готовність видалення вихідної папки
